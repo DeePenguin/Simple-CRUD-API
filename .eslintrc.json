@@ -380,6 +380,16 @@
         "node": true,
         "jest": true
       }
+    },
+    {
+      "files": ["*.js"],
+      "extends": ["prettier", "eslint:recommended", "plugin:import/recommended"],
+      "parserOptions": {
+        "project": ["tsconfig.*?.json"]
+      },
+      "env": {
+        "node": true
+      }
     }
   ]
 }
