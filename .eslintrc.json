@@ -158,12 +158,7 @@
         "prefer-numeric-literals": 2,
         "prefer-exponentiation-operator": 2,
         "no-return-assign": [2, "always"],
-        "no-console": [
-          1,
-          {
-            "allow": ["warn", "error", "debug"]
-          }
-        ],
+        "no-console": 0,
         "no-sequences": [
           2,
           {

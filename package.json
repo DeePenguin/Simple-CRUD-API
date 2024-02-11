@@ -12,8 +12,8 @@
     "lint:fix": "eslint ./src --fix",
     "format": "prettier --write ./src",
     "build": "webpack",
-    "start:dev": "tsnd --respawn ./src",
-    "start:prod": "npm run build && node dist"
+    "start:dev": "tsnd --env-file=.env --respawn ./src",
+    "start:prod": "npm run build && node --env-file .env dist"
   },
   "repository": {
     "type": "git",
