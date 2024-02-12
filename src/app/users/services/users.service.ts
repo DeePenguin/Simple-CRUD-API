@@ -20,4 +20,8 @@ export class UsersService {
   public updateById(id: UUID, user: Omit<User, 'id'>): User | null {
     return this.usersRepository.update({ ...user, id })
   }
+
+  public removeById(id: UUID): boolean {
+    return this.usersRepository.removeById(id)
+  }
 }

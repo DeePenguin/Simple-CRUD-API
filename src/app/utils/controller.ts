@@ -9,21 +9,21 @@ export abstract class Controller implements ControllerInterface {
   public abstract handleRequest(request: IncomingMessage, response: ServerResponse): void
 
   protected send(response: ServerResponse, statusCode: number, data?: unknown): void {
-    const body = data ? { data } : {}
+    const body = data ? JSON.stringify({ data }) : undefined
     response.writeHead(statusCode, {
       'Content-Type': 'application/json',
-      'content-length': Buffer.byteLength(JSON.stringify(body)),
+      'content-length': Buffer.byteLength(body ?? ''),
     })
-    response.end(JSON.stringify(body))
+    response.end(body)
   }
 
   protected sendError(response: ServerResponse, { statusCode, message, type }: APIError): void {
-    const body = { error: { type, message } }
+    const body = JSON.stringify({ error: { type, message } })
     response.writeHead(statusCode, message, {
       'Content-Type': 'application/json',
-      'content-length': Buffer.byteLength(JSON.stringify(body)),
+      'content-length': Buffer.byteLength(body),
     })
-    response.end(JSON.stringify(body))
+    response.end(body)
   }
 
   protected handleResponseError(response: ServerResponse, error: unknown): void {
@@ -32,6 +32,7 @@ export abstract class Controller implements ControllerInterface {
     if (error instanceof APIError) {
       safeError = error
     } else {
+      console.error(error)
       safeError = new APIError(ErrorMessages.INTERNAL_SERVER_ERROR, StatusCodes.INTERNAL_SERVER_ERROR, 'InternalError')
     }
 

@@ -39,6 +39,9 @@ export class UsersController extends Controller {
       [RequestMethods.PUT]: async args => {
         await this.updateUser(args)
       },
+      [RequestMethods.DELETE]: args => {
+        this.removeUserById(args)
+      },
     },
   }
 
@@ -115,5 +118,19 @@ export class UsersController extends Controller {
     }
 
     this.send(response, StatusCodes.OK, user)
+  }
+
+  private removeUserById({ response, id }: HandlerParams): void {
+    if (!validateId(id)) {
+      throw new InvalidUserIdError()
+    }
+
+    const isUserRemoved = this.usersService.removeById(id)
+
+    if (!isUserRemoved) {
+      throw new UserNotFoundError()
+    }
+
+    this.send(response, StatusCodes.NO_CONTENT)
   }
 }
