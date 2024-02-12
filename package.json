@@ -13,7 +13,9 @@
     "format": "prettier --write ./src",
     "build": "webpack",
     "start:dev": "tsnd --env-file=.env --respawn ./src",
-    "start:prod": "npm run build && node --env-file .env dist"
+    "start:prod": "npm run build && node --env-file .env dist",
+    "start:dev:multi": "npm run start:dev -- --multi=true",
+    "start:prod:multi": "npm run start:prod -- --multi=true"
   },
   "repository": {
     "type": "git",

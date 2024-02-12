@@ -11,7 +11,7 @@ export class App {
 
   public run(): void {
     this.controller.createServer().listen(this.port, () => {
-      console.log(`Server running on port ${this.port}`)
+      console.log(`Server ${process.pid} is running on port ${this.port}`)
     })
   }
 }
