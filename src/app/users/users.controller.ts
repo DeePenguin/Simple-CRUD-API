@@ -67,7 +67,9 @@ export class UsersController extends Controller {
   }
 
   private async createUser({ response, request }: HandlerParams): Promise<void> {
-    const user = await getRequestBody(request)
+    const user = await getRequestBody(request).catch(() => {
+      throw new InvalidUserDataError()
+    })
 
     if (!validateUser(user)) {
       throw new InvalidUserDataError()

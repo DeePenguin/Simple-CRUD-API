@@ -5,7 +5,11 @@ export const getRequestBody = (request: IncomingMessage): Promise<unknown> => {
     const body: Buffer[] = []
     request.on('data', (chunk: Buffer) => body.push(chunk))
     request.on('end', () => {
-      resolve(JSON.parse(Buffer.concat(body).toString()))
+      try {
+        resolve(JSON.parse(Buffer.concat(body).toString()))
+      } catch (error) {
+        reject(error)
+      }
     })
     request.on('error', reject)
   })
