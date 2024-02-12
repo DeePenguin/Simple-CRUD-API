@@ -3,17 +3,15 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { endpointsMap } from './helpers/endpoints-map.helper'
 import { parseRequestUrl } from './helpers/parse-request-url.helper'
 import { Endpoints } from './models/endpoints.enum'
-import { ErrorMessages } from './models/error-messages.enum'
-import { StatusCodes } from './models/status-codes.enum'
-import type { Controller } from './users/models/controller.model'
-import { APIError } from './utils/api.error'
+import { Controller } from './utils/controller'
 import { InvalidEndpointError } from './utils/invalid-endpoint.error'
 
-export class AppController implements Controller {
+export class AppController extends Controller {
   private controllers: Map<string, Controller>
   private pathSegment = Endpoints.ROOT
 
   constructor() {
+    super()
     this.controllers = new Map()
     Object.entries(endpointsMap).forEach(([key, value]) => {
       this.controllers.set(key, value)
@@ -43,23 +41,6 @@ export class AppController implements Controller {
     } catch (error) {
       this.handleResponseError(response, error)
     }
-  }
-
-  private sendError(response: ServerResponse, { statusCode, message, body }: APIError): void {
-    response.writeHead(statusCode, message)
-    response.end(body ? JSON.stringify(body) : undefined)
-  }
-
-  private handleResponseError(response: ServerResponse, error: unknown): void {
-    let safeError
-
-    if (error instanceof APIError) {
-      safeError = error
-    } else {
-      safeError = new APIError(ErrorMessages.INTERNAL_SERVER_ERROR, StatusCodes.INTERNAL_SERVER_ERROR)
-    }
-
-    this.sendError(response, safeError)
   }
 
   private findController(url: string): Controller | null {

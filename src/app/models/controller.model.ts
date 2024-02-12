@@ -1,5 +1,5 @@
 import type { RequestListener } from 'http'
 
-export interface Controller {
+export interface ControllerInterface {
   handleRequest: RequestListener
 }
