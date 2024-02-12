@@ -16,4 +16,8 @@ export class UsersService {
   public findOneById(id: UUID): User | null {
     return this.usersRepository.findOneById(id)
   }
+
+  public updateById(id: UUID, user: Omit<User, 'id'>): User | null {
+    return this.usersRepository.update({ ...user, id })
+  }
 }

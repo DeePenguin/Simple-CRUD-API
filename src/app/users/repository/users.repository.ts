@@ -27,6 +27,16 @@ export class UsersRepository {
     return this.save(user)
   }
 
+  public update({ username, age, hobbies, id }: User): User | null {
+    if (!UsersRepository.users.has(id)) {
+      return null
+    }
+
+    const userEntity = new UserEntity(id, username, age, hobbies)
+
+    return this.save(userEntity)
+  }
+
   public removeById(id: UUID): boolean {
     return UsersRepository.users.delete(id)
   }

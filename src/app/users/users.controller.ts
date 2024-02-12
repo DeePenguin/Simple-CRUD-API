@@ -36,6 +36,9 @@ export class UsersController extends Controller {
       [RequestMethods.GET]: args => {
         this.getUserById(args)
       },
+      [RequestMethods.PUT]: async args => {
+        await this.updateUser(args)
+      },
     },
   }
 
@@ -67,15 +70,15 @@ export class UsersController extends Controller {
   }
 
   private async createUser({ response, request }: HandlerParams): Promise<void> {
-    const user = await getRequestBody(request).catch(() => {
+    const userDto = await getRequestBody(request).catch(() => {
       throw new InvalidUserDataError()
     })
 
-    if (!validateUser(user)) {
+    if (!validateUser(userDto)) {
       throw new InvalidUserDataError()
     }
 
-    this.send(response, StatusCodes.CREATED, this.usersService.create(user))
+    this.send(response, StatusCodes.CREATED, this.usersService.create(userDto))
   }
 
   private getUserById({ response, id }: HandlerParams): void {
@@ -84,6 +87,28 @@ export class UsersController extends Controller {
     }
 
     const user = this.usersService.findOneById(id)
+
+    if (!user) {
+      throw new UserNotFoundError()
+    }
+
+    this.send(response, StatusCodes.OK, user)
+  }
+
+  private async updateUser({ request, response, id }: HandlerParams): Promise<void> {
+    if (!validateId(id)) {
+      throw new InvalidUserIdError()
+    }
+
+    const userDto = await getRequestBody(request).catch(() => {
+      throw new InvalidUserDataError()
+    })
+
+    if (!validateUser(userDto)) {
+      throw new InvalidUserDataError()
+    }
+
+    const user = this.usersService.updateById(id, userDto)
 
     if (!user) {
       throw new UserNotFoundError()
