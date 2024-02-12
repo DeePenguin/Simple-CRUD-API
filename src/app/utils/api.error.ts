@@ -1,8 +1,8 @@
 export class APIError extends Error {
   constructor(
     message: string,
-    public statusCode: number,
-    public body?: string,
+    public readonly statusCode: number,
+    public readonly type: string = 'Error',
   ) {
     super(message)
   }
