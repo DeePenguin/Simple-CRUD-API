@@ -7,8 +7,11 @@ import { StatusCodes } from '../models/status-codes.enum'
 import { Controller } from '../utils/controller'
 import { InvalidEndpointError } from '../utils/invalid-endpoint.error'
 import { InvalidUserDataError } from '../utils/invalid-user-data.error'
+import { InvalidUserIdError } from '../utils/invalid-user-id.error'
+import { UserNotFoundError } from '../utils/user-not-found.error'
 import { UsersRepository } from './repository/users.repository'
 import { UsersService } from './services/users.service'
+import { validateId } from './validators/id.validator'
 import { validateUser } from './validators/user.validator'
 
 interface HandlerParams {
@@ -29,7 +32,11 @@ export class UsersController extends Controller {
         await this.createUser({ response, request })
       },
     },
-    id: {},
+    id: {
+      [RequestMethods.GET]: args => {
+        this.getUserById(args)
+      },
+    },
   }
 
   public async handleRequest(
@@ -67,5 +74,19 @@ export class UsersController extends Controller {
     }
 
     this.send(response, StatusCodes.CREATED, this.usersService.create(user))
+  }
+
+  private getUserById({ response, id }: HandlerParams): void {
+    if (!validateId(id)) {
+      throw new InvalidUserIdError()
+    }
+
+    const user = this.usersService.findOneById(id)
+
+    if (!user) {
+      throw new UserNotFoundError()
+    }
+
+    this.send(response, StatusCodes.OK, user)
   }
 }
