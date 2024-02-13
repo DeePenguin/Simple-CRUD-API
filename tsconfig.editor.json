@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts", "*.js", "webpack.config.ts"],
+  "compilerOptions": {
+    "types": ["jest", "node"]
+  }
+}
